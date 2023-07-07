@@ -63,7 +63,25 @@ class MortgageTest extends TestCase
         $response = $this->json('post', 'api/calculate-mortgage', $payload);
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonStructure([]);
+        $response->assertJsonStructure(['schedule']);
     }
 
+    public function test_calculator_valid_input_with_extra()
+    {
+        $payload = [
+            'amount' => 10000,
+            'interest' => 5,
+            'term' => 10,
+            'extra' => 50
+        ];
+
+        $response = $this->json('post', 'api/calculate-mortgage', $payload);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure(['schedule']);
+        $this->assertEquals($response['schedule'][0][0], 64.40);
+        $this->assertEquals($response['schedule'][0][1], 41.67);
+        $this->assertEquals($response['schedule'][0][2], "9,885.60");
+        $this->assertEquals($response['schedule'][0][3], 79);
+    }
 }

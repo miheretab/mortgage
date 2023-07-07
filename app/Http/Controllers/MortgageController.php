@@ -31,7 +31,8 @@ class MortgageController extends Controller
         }
 
         $extra = isset($input['extra']) ? $input['extra'] : 0;
+        $monthlySchedule = MortgageCalculator::getMonthlyDetailInList($input['amount'], $input['interest'], $input['term'], $extra);
 
-        return response()->json(MortgageCalculator::getMonthlyDetailInList($input['amount'], $input['interest'], $input['term'], $extra));
+        return response()->json(['schedule' => $monthlySchedule]);
     }
 }
