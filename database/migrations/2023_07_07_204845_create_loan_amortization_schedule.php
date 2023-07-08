@@ -16,11 +16,11 @@ class CreateLoanAmortizationSchedule extends Migration
         Schema::create('loan_amortization_schedule', function (Blueprint $table) {
             $table->id();
             $table->integer('month_number');
-            $table->decimal('starting_balance', 2);
-            $table->decimal('monthly_payment', 2);
-            $table->decimal('prinicipal_component', 2);
-            $table->decimal('interest_component', 2);
-            $table->decimal('ending_balance', 2);
+            $table->decimal('starting_balance', 10, 2);
+            $table->decimal('monthly_payment', 10, 2);
+            $table->decimal('principal_component', 10, 2);
+            $table->decimal('interest_component', 10, 2);
+            $table->decimal('ending_balance', 10, 2);
             $table->timestamps();
         });
     }
