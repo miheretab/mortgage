@@ -10,6 +10,13 @@ class LoanAmortizationSchedule extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'loan_amortization_schedule';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
