@@ -32,8 +32,8 @@ class MortgageTest extends TestCase
 
         $response = $this->json('post', 'api/calculate-mortgage', $payload);
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        $response->assertJsonStructure(['error' => ['amount']]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure(['message', 'errors' => ['amount']]);
     }
 
     public function test_calculator_invalid_input_format2()
@@ -47,8 +47,8 @@ class MortgageTest extends TestCase
 
         $response = $this->json('post', 'api/calculate-mortgage', $payload);
 
-        $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        $response->assertJsonStructure(['error' => ['interest']]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonStructure(['message', 'errors' => ['interest']]);
     }
 
     public function test_calculator_valid_input()
@@ -83,5 +83,7 @@ class MortgageTest extends TestCase
         $this->assertEquals($response['schedule'][0][1], 41.67);
         $this->assertEquals($response['schedule'][0][2], "9,885.60");
         $this->assertEquals($response['schedule'][0][3], 79);
+        $this->assertEquals($response['effectiveInterestRate'], 23.86);
+        $this->assertEquals($response['totalInterest'], 2385.62);
     }
 }

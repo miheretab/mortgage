@@ -2,37 +2,85 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CalculateMortgageRequest;
 use Illuminate\Http\Request;
-use Validator;
 use MortgageCalculator;
+use Validator;
 
 class MortgageController extends Controller
 {
-    public function calculate(Request $request) {
+    public function calculate(CalculateMortgageRequest $request) {
         $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'amount' => 'required|numeric|min:0',
-            'interest' => 'required|numeric|min:0|max:100',
-            'term' => 'required|numeric|min:1',
-            'extra' => 'numeric|min:0',
-        ], [
-            'amount.required' => 'The Loan Amount is required.',
-            'interest.required' => 'The Annual Interest Rate is required.',
-            'term.required' => 'The Loan Term is required.',
-            'interest.min' => 'The Annual Interest Rate should be between 0 and 100.',
-            'interest.max' => 'The Annual Interest Rate should be between 0 and 100.',
-            'term.min' => 'The Loan Term should be greater than 1.',
-            'amount.min' => 'The Loan Amount should be greater than 0.'
-        ]);
+        $extra = isset($input['extra']) ? $input['extra'] : 0;
 
-        if ($validator->fails() || count($validator->errors()) > 0) {
-            return response()->json(['error' => $validator->errors()], 400);
+        $monthlySchedule = MortgageCalculator::getMonthlyDetailInList($input['amount'], $input['interest'], $input['term'], $extra);
+        $monthlyPayment = MortgageCalculator::calculateMonthlyPayment($input['amount'], $input['interest'], $input['term']);
+
+        $totalInterest = round(array_sum(array_column($monthlySchedule, 1)), 2);
+        $totalTerm = count($monthlySchedule);
+        $effectiveInterestRate = round($totalInterest * 100/ $input['amount'], 2);
+
+        if (isset($input['save']) && $extra > 0) {
+            $this->storeExtraRepaymentSchedule($input['amount'], $extra, $monthlySchedule);
+        } else if (isset($input['save'])) {
+            $this->storeLoanAmortizationSchedule($input['amount'], $monthlySchedule);
         }
 
-        $extra = isset($input['extra']) ? $input['extra'] : 0;
-        $monthlySchedule = MortgageCalculator::getMonthlyDetailInList($input['amount'], $input['interest'], $input['term'], $extra);
+        return response()->json([
+            'schedule' => $monthlySchedule,
+            'monthlyPayment' => $monthlyPayment,
+            'totalInterest' => $totalInterest,
+            'totalTerm' => $totalTerm,
+            'effectiveInterestRate' => $effectiveInterestRate
+        ]);
+    }
 
-        return response()->json(['schedule' => $monthlySchedule]);
+    /**
+    * Assuming only one generated table to show schedule (not related to any user)
+    * @param $startingBalance
+    * @param $monthlySchedule generated based on morgate calculator
+    * with index 0 - principal, index 1 - interest and index 2 - balance
+    */
+    public function storeLoanAmortizationSchedule($startingBalance, $monthlySchedule) {
+        LoanAmortizationSchedule::truncate();
+
+        foreach ($monthlySchedule as $i => $monthlyDetail) {
+            $monthlyPayment = $monthlyDetail[0] + $monthlyDetail[1];
+
+            LoanAmortizationSchedule::create([
+                'month_number' => $i+1,
+                'starting_balance' => $startingBalance,
+                'monthly_payment' => $monthlyPayment,
+                'principal_component' => $monthlyDetail[0],
+                'interest_component' => $monthlyDetail[1],
+                'ending_balance' => $monthlyDetail[2]
+            ]);
+        }
+    }
+
+    /**
+    * Assuming only one generated table to show schedule (not related to any user)
+    * @param $startingBalance
+    * @param $monthlySchedule generated based on morgate calculator
+    * with index 0 - principal, index 1 - interest, index 2 - balance and index 3 - remaining term
+    */
+    public function storeExtraRepaymentSchedule($startingBalance, $extraPaymentMonthly, $monthlySchedule) {
+        ExtraRepaymentSchedule::truncate();
+
+        foreach ($monthlySchedule as $i => $monthlyDetail) {
+            $monthlyPayment = $monthlyDetail[0] + $monthlyDetail[1];
+
+            ExtraRepaymentSchedule::create([
+                'month_number' => $i+1,
+                'starting_balance' => $startingBalance,
+                'monthly_payment' => $monthlyPayment,
+                'principal_component' => $monthlyDetail[0],
+                'interest_component' => $monthlyDetail[1],
+                'extra_repayment' => $extraPaymentMonthly,
+                'ending_balance' => $monthlyDetail[2],
+                'remaining_loan_term' => $monthlyDetail[3]
+            ]);
+        }
     }
 }
