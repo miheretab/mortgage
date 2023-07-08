@@ -24,31 +24,31 @@
                 {
                     "principal": "64.40",
                     "interest": "41.67",
-                    "balance": "9,885.60",
+                    "balance": "9885.60",
                     "remainingTerm": 79
                 },
                 {
                     "principal": "64.67",
                     "interest": "41.40",
-                    "balance": "9,770.93",
+                    "balance": "9770.93",
                     "remainingTerm": 78
                 },
                 {
                     "principal": "64.94",
                     "interest": "41.13",
-                    "balance": "9,655.99",
+                    "balance": "9655.99",
                     "remainingTerm": 77
                 },
                 {
                     "principal": "65.21",
                     "interest": "40.86",
-                    "balance": "9,540.78",
+                    "balance": "9540.78",
                     "remainingTerm": 76
                 },
                 {
                     "principal": "65.48",
                     "interest": "40.59",
-                    "balance": "9,425.30",
+                    "balance": "9425.30",
                     "remainingTerm": 75
                 },
                 .....
