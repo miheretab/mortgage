@@ -7,6 +7,7 @@
 - `php artisan key:generate` to generate key in the env
 - `php artisan migrate` migrate the database structure
 - `php artisan serve` inorder to run the server locally
+- `php artisan test` inorder to run the test and see all logic works
 - there is an api which generate loan schedule `POST api/calculate-mortgage`
     - these are sample parameters with loan amount 10,000, Interest Rate 5%, Term 10 years and Extra Payment Monthly 50
         ```
