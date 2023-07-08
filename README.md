@@ -1,6 +1,6 @@
 
 ## How to set up the mortgate calculator app
-
+The application is made in Laravel 8 so at least you need to have PHP 7.3 version.
 - `composer install`
 - create a database (name like mortgage) with utf8_general_ci collation
 - `cp .env.example .env` copy and update env with database variables e.g change DB_DATABASE=laravel to the database you created (like mortgage)
