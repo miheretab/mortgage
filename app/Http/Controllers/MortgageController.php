@@ -10,6 +10,9 @@ use Validator;
 
 class MortgageController extends Controller
 {
+    /**
+    * calculate action for the api/calculate-mortgage
+    */
     public function calculate(CalculateMortgageRequest $request, MortgageSchedule $mortgageSchedule) {
         $input = $request->all();
 

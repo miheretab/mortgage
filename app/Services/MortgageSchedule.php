@@ -11,7 +11,7 @@ class MortgageSchedule {
     * Assuming only one generated table to show schedule (not related to any user)
     * @param $startingBalance
     * @param $monthlySchedule generated based on morgate calculator
-    * with index 0 - principal, index 1 - interest and index 2 - balance
+    * with first index - principal, second index - interest and third index - balance
     */
     public static function storeLoanAmortizationSchedule($startingBalance, $monthlySchedule) {
         LoanAmortizationSchedule::truncate();
@@ -33,8 +33,9 @@ class MortgageSchedule {
     /**
     * Assuming only one generated table to show schedule (not related to any user)
     * @param $startingBalance
+    * @param $extraPaymentMonthly
     * @param $monthlySchedule generated based on morgate calculator
-    * with index 0 - principal, index 1 - interest, index 2 - balance and index 3 - remaining term
+    * with first index - principal, second index - interest, third index - balance and fourth index - remaining term
     */
     public static function storeExtraRepaymentSchedule($startingBalance, $extraPaymentMonthly, $monthlySchedule) {
         ExtraRepaymentSchedule::truncate();
