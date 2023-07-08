@@ -68,8 +68,12 @@ class MortgageCalculator {
             $remainingAmount = round($remainingAmount, 2, PHP_ROUND_HALF_EVEN);
             $amount = round($amount, 2, PHP_ROUND_HALF_EVEN);
             $principal = round($principal, 2, PHP_ROUND_HALF_EVEN);
+            $monthlyInterest = round($monthlyInterest, 2, PHP_ROUND_HALF_EVEN);
 
-            $monthlyList[] = [number_format($principal, 2), number_format($monthlyInterest, 2), number_format($remainingAmount, 2), $remainingTerm];
+            $monthlyList[] = ["principal" => $principal,
+                            "interest" => $monthlyInterest,
+                            "balance" => $remainingAmount,
+                            "remainingTerm" => $remainingTerm];
 
             if ($remainingAmount == 0) {
                 break;
@@ -81,7 +85,7 @@ class MortgageCalculator {
         if ($extra > 0) {
             $remainingTerm = $termInMonth - $remainingTerm;
             foreach ($monthlyList as $i => $monthDetail) {
-                $monthlyList[$i][3] = $remainingTerm - ($i+1);
+                $monthlyList[$i]["remainingTerm"] = $remainingTerm - ($i+1);
             }
         }
 

@@ -79,11 +79,28 @@ class MortgageTest extends TestCase
 
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonStructure(['schedule']);
-        $this->assertEquals($response['schedule'][0][0], 64.40);
-        $this->assertEquals($response['schedule'][0][1], 41.67);
-        $this->assertEquals($response['schedule'][0][2], "9,885.60");
-        $this->assertEquals($response['schedule'][0][3], 79);
+        $this->assertEquals($response['schedule'][0]["principal"], 64.40);
+        $this->assertEquals($response['schedule'][0]["interest"], 41.67);
+        $this->assertEquals($response['schedule'][0]["balance"], 9885.60);
+        $this->assertEquals($response['schedule'][0]["remainingTerm"], 79);
         $this->assertEquals($response['effectiveInterestRate'], 23.86);
         $this->assertEquals($response['totalInterest'], 2385.62);
+    }
+
+    /**
+    * Testing Views
+    */
+    public function test_calculator_view()
+    {
+        $response = $this->get('/');
+
+        $response->assertSee("Mortgage Calculator");
+        $response->assertSee("Loan Amount");
+        $response->assertSee("Loan Term");
+        $response->assertSee("Shortened Term");
+        $response->assertSee("Annual Interest Rate");
+        $response->assertSee("Effective Interest Rate");
+        $response->assertSee("Total Interest");
+        $response->assertSee("Monthly Payment");
     }
 }

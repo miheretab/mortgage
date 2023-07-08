@@ -43,10 +43,14 @@ class MortgageTest extends TestCase
         $amount = 10000;
         $interest = 5;
 
-        $detailList = [[64.40, 41.67, "9,935.60", 119], [64.67, 41.40, "9,870.93", 118],
-                    [64.94, 41.13, "9,805.99", 117], [65.21, 40.86, "9,740.78", 116],
-                    [65.48, 40.59, "9,675.30", 115], [65.76, 40.31, "9,609.54", 114],
-                    [66.03, 40.04, "9,543.51", 113], [66.31, 39.76, "9,477.20", 112]];
+        $detailList = [["principal" => 64.40, "interest" => 41.67, "balance" => 9935.60, "remainingTerm" => 119],
+                    ["principal" => 64.67, "interest" => 41.40, "balance" => 9870.93, "remainingTerm" => 118],
+                    ["principal" => 64.94, "interest" => 41.13, "balance" => 9805.99, "remainingTerm" => 117],
+                    ["principal" => 65.21, "interest" => 40.86, "balance" => 9740.78, "remainingTerm" => 116],
+                    ["principal" => 65.48, "interest" => 40.59, "balance" => 9675.30, "remainingTerm" => 115],
+                    ["principal" => 65.76, "interest" => 40.31, "balance" => 9609.54, "remainingTerm" => 114],
+                    ["principal" => 66.03, "interest" => 40.04, "balance" => 9543.51, "remainingTerm" => 113],
+                    ["principal" => 66.31, "interest" => 39.76, "balance" => 9477.20, "remainingTerm" => 112]];
 
         $mortgageCalculator = new MortgageCalculator();
         $monthlyList = $mortgageCalculator->getMonthlyDetailInList($amount, $interest, $term);
@@ -60,8 +64,8 @@ class MortgageTest extends TestCase
             }
         }
 
-        $lastPrincipal = $monthlyList[count($monthlyList) - 1][0];
-        $lastInterest = $monthlyList[count($monthlyList) - 1][1];
+        $lastPrincipal = $monthlyList[count($monthlyList) - 1]["principal"];
+        $lastInterest = $monthlyList[count($monthlyList) - 1]["interest"];
         $monthlyPayment = 106;
         $this->assertEquals(round((($term * 12) - 1) * $monthlyPayment + $lastPrincipal + $lastInterest), 12719);
     }
@@ -72,10 +76,14 @@ class MortgageTest extends TestCase
         $interest = 5;
         $extra = 50;
 
-        $detailList = [[64.40, 41.67, "9,885.60", 79], [64.67, 41.40, "9,770.93", 78],
-                    [64.94, 41.13, "9,655.99", 77], [65.21, 40.86, "9,540.78", 76],
-                    [65.48, 40.59, "9,425.30", 75], [65.76, 40.31, "9,309.54", 74],
-                    [66.03, 40.04, "9,193.51", 73], [66.31, 39.76, "9,077.20", 72]];
+        $detailList = [["principal" => 64.40, "interest" => 41.67, "balance" => 9885.60, "remainingTerm" => 79],
+                    ["principal" => 64.67, "interest" => 41.40, "balance" => 9770.93, "remainingTerm" => 78],
+                    ["principal" => 64.94, "interest" => 41.13, "balance" => 9655.99, "remainingTerm" => 77],
+                    ["principal" => 65.21, "interest" => 40.86, "balance" => 9540.78, "remainingTerm" => 76],
+                    ["principal" => 65.48, "interest" => 40.59, "balance" => 9425.30, "remainingTerm" => 75],
+                    ["principal" => 65.76, "interest" => 40.31, "balance" => 9309.54, "remainingTerm" => 74],
+                    ["principal" => 66.03, "interest" => 40.04, "balance" => 9193.51, "remainingTerm" => 73],
+                    ["principal" => 66.31, "interest" => 39.76, "balance" => 9077.20, "remainingTerm" => 72]];
 
         $mortgageCalculator = new MortgageCalculator();
         $monthlyList = $mortgageCalculator->getMonthlyDetailInList($amount, $interest, $term, $extra);
@@ -89,8 +97,8 @@ class MortgageTest extends TestCase
             }
         }
 
-        $lastPrincipal = $monthlyList[count($monthlyList) - 1][0];
-        $lastInterest = $monthlyList[count($monthlyList) - 1][1];
+        $lastPrincipal = $monthlyList[count($monthlyList) - 1]["principal"];
+        $lastInterest = $monthlyList[count($monthlyList) - 1]["interest"];
         $monthlyPayment = 156;
         $remainingTerm = 79;
         $this->assertEquals(round($remainingTerm * $monthlyPayment + $lastPrincipal + $lastInterest), 12380);
